@@ -26,7 +26,7 @@
                 <br>
                 <div>
                   <h5><strong>Estadisticas:</strong></h5>
-                  <p v-for="stat in pokemon.stats"><strong>{{ stat.stat.name }}:</strong> {{ stat.base_stat }}</p>
+                  <p v-for="stat in pokemon.stats"><strong>{{ stat.stat.name }}:</strong> {{ stat.base_stat }}pts</p>
                 </div>
 
                 <br>

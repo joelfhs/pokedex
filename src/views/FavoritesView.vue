@@ -3,16 +3,9 @@
     <h1 class="text-center">{{ title }}:</h1>
     <div class="row align-items-center justify-content-center h-100">
 
-      <pokemon-list v-on:get_pokemon="onResult" :pokemonList="pokemonList"></pokemon-list>
+      <pokemon-list v-on:get_pokemon="onResult" :pokemonList="pokemonList" :favorites="true"></pokemon-list>
 
       <pokemon-show :pokemon="pokemon"></pokemon-show>
-
-      <div class="col-12 text-center my-3">
-        <div class="btn-group btn-group-lg" role="group" aria-label="Large button group">
-          <button type="button" class="btn btn-primary" v-if="previousPage != null" @click="loadPokemons(previousPage)">Anteriror</button>
-          <button type="button" class="btn btn-primary" @click="loadPokemons(nextPage)">Siguiente</button>
-        </div>
-      </div>
 
     </div>
   </div>
@@ -33,34 +26,21 @@
     },
     data() {
       return {
-        title: "Pokemones",
+        title: "Pokemones Favoritos",
         pokemonLinks: [],
         pokemonList: [],
         pokemon: {},
-        previousPage: "",
-        nextPage: "",
       }
     },
     methods: {
-      async loadPokemons(page) {
-        await axios.get(page ? page : 'https://pokeapi.co/api/v2/pokemon/?offset=0&limit=8')
-        .then((response) => {
-          this.pokemonLinks = response.data.results;
-          this.previousPage = response.data.previous;
-          this.nextPage = response.data.next;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-
-        this.pokemonList = [];
+      async loadPokemons() {
         let favoritos = Cookies.get('fav');
         if(favoritos){
           favoritos = favoritos.split(";");
         }
 
-        for(const pokemon of this.pokemonLinks) {
-          await axios.get(pokemon.url)
+        for(const pokemon of favoritos) {
+          await axios.get('https://pokeapi.co/api/v2/pokemon/'+pokemon)
           .then((response) => {
             this.pokemonList.push({
               id: response.data.id,

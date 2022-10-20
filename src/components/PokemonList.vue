@@ -12,7 +12,12 @@
 
       <div class="card-footer">
         <button class="btn btn-primary float-start" data-bs-toggle="modal" data-bs-target="#pokemonModal" @click="sendPokemon(pokemon.id);"><i class="bi bi-search"></i> Ver</button>
-        <button class="btn btn-danger float-end" @click="favorito(pokemon.id, index);">
+
+        <button v-if="favorites" class="btn btn-danger float-end" @click="eliminar(pokemon.id, index);">
+          <i class="bi bi-trash"></i>
+        </button>
+
+        <button v-else class="btn btn-danger float-end" @click="favorito(pokemon.id, index);">
           <i v-if="pokemon.like" class="bi bi-heart-fill"></i>
           <i v-else class="bi bi-heart"></i>
         </button>
@@ -30,12 +35,12 @@
         //pokemonLink: ""
       }
     },
-    props: ["pokemonList"],
+    props: ["pokemonList", "favorites"],
     methods: {
-      async sendPokemon(id){
+      async sendPokemon(id) {
         this.$emit('get_pokemon', id);
       },
-      favorito(id, index){
+      favorito(id, index) {
         //Cookies.remove('fav');
         let favoritos = Cookies.get('fav');
 
@@ -64,6 +69,24 @@
         }else {
           this.pokemonList[index].like = true;
           Cookies.set('fav', id, { expires: 7 });
+        }
+      },
+      eliminar(id, index) {
+        let favoritos = Cookies.get('fav');
+
+        if(favoritos) {
+          favoritos = favoritos.split(';');
+          let newFav = favoritos.map(fav => {
+            if(fav == id) {
+              //mensaje de se quito el id
+              this.pokemonList.splice(index, 1);
+            }else {
+              return fav;
+            }
+          });
+  
+          newFav = newFav.filter(element => element != undefined);
+          Cookies.set('fav', newFav.join(";"), { expires: 7 });
         }
       }
     }
