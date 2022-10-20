@@ -1,9 +1,11 @@
 <template>
   <div class="container bg-white p-3">
     <h1 class="text-center">{{ title }}:</h1>
-    <div class="row align-items-center">
+    <div class="row align-items-center justify-content-center">
 
-      <pokemon-list :pokemonList="pokemonList"></pokemon-list>
+      <pokemon-list v-on:get_pokemon="onResult" :pokemonList="pokemonList"></pokemon-list>
+
+      <pokemon-show :pokemon="pokemon"></pokemon-show>
 
       <div class="col-12 text-center my-3">
         <div class="btn-group btn-group-lg" role="group" aria-label="Large button group">
@@ -20,9 +22,11 @@
 <script>
   import axios from 'axios';
   import pokemonList from "../components/PokemonList.vue";
+  import pokemonShow from "../components/PokemonShow.vue";
   export default { 
     components: {
         pokemonList,
+        pokemonShow,
     },
     data() {
       return {
@@ -31,11 +35,13 @@
         pokemonList: [],
         previousPage: "",
         nextPage: "",
+        //pokemonId: "",
+        pokemon: [],
       }
     },
     methods: {
       async loadPokemons(page) {
-        await axios.get(page ? page : 'https://pokeapi.co/api/v2/pokemon/')
+        await axios.get(page ? page : 'https://pokeapi.co/api/v2/pokemon/?offset=0&limit=8')
         .then((response) => {
           this.pokemonLinks = response.data.results;
           this.previousPage = response.data.previous;
@@ -61,6 +67,29 @@
           });
         }
       },
+      async onResult(id){
+        //this.pokemon = [];
+        //this.pokemonId = id;
+
+        await axios.get('https://pokeapi.co/api/v2/pokemon/'+id)
+        .then((response) => {
+          this.pokemon = {
+            id:response.data.id,
+            name: response.data.name,
+            image: response.data.sprites.other.dream_world.front_default,
+            types: response.data.types,
+            height: response.data.height,
+            weight: response.data.weight,
+            base_experience: response.data.base_experience,
+            stats: response.data.stats,
+            abilities: response.data.abilities,
+          };
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+      }
     },
 
     async mounted() {
@@ -71,7 +100,7 @@
 
 
 <style>
-  div.card img {
+  div.card img, div#pokemonModal div.modal-body img {
     max-height: 400px;
   }
   div.card div.card-body {

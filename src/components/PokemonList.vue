@@ -6,12 +6,12 @@
       <div class="card-body">
         <h3 class="card-title text-center">{{ pokemon.name }}</h3>
         <div class="card-text text-center">
-          <span class="m-1" v-for="pokemonType in pokemon.types">{{ pokemonType.type.name }}</span>
+          <h5><span class="badge bg-secondary m-1" v-for="pokemonType in pokemon.types">{{ pokemonType.type.name }}</span></h5>
         </div>
       </div>
 
       <div class="card-footer">
-        <button class="btn btn-primary float-start" data-bs-toggle="modal" data-bs-target="#exampleModal" @click="sendPokemon(pokemon.id);">Ver</button>
+        <button class="btn btn-primary float-start" data-bs-toggle="modal" data-bs-target="#pokemonModal" @click="sendPokemon(pokemon.id);">Ver</button>
         <button class="btn btn-danger float-end" @click="favorito(pokemon.id);">Favorito</button>
       </div>
 
@@ -27,5 +27,13 @@
       }
     },
     props: ["pokemonList"],
+    methods: {
+      async sendPokemon(id){
+        this.$emit('get_pokemon', id);
+      },
+      favorito(id){
+        //this.pokemonLink = id;
+      }
+    }
   };
 </script>
