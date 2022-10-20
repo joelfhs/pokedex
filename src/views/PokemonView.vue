@@ -21,6 +21,7 @@
 
 <script>
   import axios from 'axios';
+  import Cookies from 'js-cookie';
   import pokemonList from "../components/PokemonList.vue";
   import pokemonShow from "../components/PokemonShow.vue";
   export default { 
@@ -52,14 +53,20 @@
         });
 
         this.pokemonList = [];
+        let favoritos = Cookies.get('fav');
+        if(favoritos){
+          favoritos = favoritos.split(";");
+        }
+        console.log(favoritos);
         for(const pokemon of this.pokemonLinks) {
           await axios.get(pokemon.url)
           .then((response) => {
             this.pokemonList.push({
-              id:response.data.id,
+              id: response.data.id,
               name: response.data.name,
               image: response.data.sprites.other.dream_world.front_default,
-              types: response.data.types
+              types: response.data.types,
+              like: (favoritos) ? ((favoritos.includes(String(response.data.id))) ? true : false) : false,
             });
           })
           .catch((error) => {
