@@ -20,6 +20,7 @@
     data() {
       return {
         title: "Pokemones",
+        pokemonLinks: [],
         pokemonList: [],
       }
     },
@@ -27,11 +28,27 @@
       async loadPokemons() {
         await axios.get('https://pokeapi.co/api/v2/pokemon/')
         .then((response) => {
-          this.pokemonList = response.data.results;
+          this.pokemonLinks = response.data.results;
         })
         .catch((error) => {
           console.log(error);
         });
+
+        this.pokemonList = [];
+        for(const pokemon of this.pokemonLinks) {
+          await axios.get(pokemon.url)
+          .then((response) => {
+            this.pokemonList.push({
+              id:response.data.id,
+              name: response.data.name,
+              image: response.data.sprites.other.dream_world.front_default,
+              types: response.data.types
+            });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        }
       },
     },
 
