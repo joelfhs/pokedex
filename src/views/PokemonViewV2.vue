@@ -1,18 +1,18 @@
 <template>
   <div class="container bg-white p-3">
-    <h1 class="text-center">{{ title }}: (con paginación)</h1>
+    <h1 class="text-center">{{ title }}: (con scroll infinito)</h1>
     <div class="row align-items-center justify-content-center h-100">
 
       <pokemon-list v-on:get_pokemon="onResult" :pokemonList="pokemonList"></pokemon-list>
 
       <pokemon-show :pokemon="pokemon"></pokemon-show>
 
-      <div class="col-12 text-center my-3">
+      <!--<div class="col-12 text-center my-3">
         <div class="btn-group btn-group-lg" role="group" aria-label="Large button group">
           <button type="button" class="btn btn-primary" v-if="previousPage != null" @click="loadPokemons(previousPage)">Anteriror</button>
           <button type="button" class="btn btn-primary" @click="loadPokemons(nextPage)">Siguiente</button>
         </div>
-      </div>
+      </div>-->
 
     </div>
   </div>
@@ -37,7 +37,7 @@
         pokemonLinks: [],
         pokemonList: [],
         pokemon: {},
-        previousPage: "",
+        //previousPage: "",
         nextPage: "",
       }
     },
@@ -46,14 +46,14 @@
         await axios.get(page ? page : 'https://pokeapi.co/api/v2/pokemon/?offset=0&limit=8')
         .then((response) => {
           this.pokemonLinks = response.data.results;
-          this.previousPage = response.data.previous;
+          //this.previousPage = response.data.previous;
           this.nextPage = response.data.next;
         })
         .catch((error) => {
           console.log(error);
         });
 
-        this.pokemonList = [];
+        //this.pokemonList = [];
         let favoritos = Cookies.get('fav');
         if(favoritos){
           favoritos = favoritos.split(";");
@@ -94,13 +94,23 @@
         .catch((error) => {
           console.log(error);
         });
+      },
 
-      }
+      vueOnScroll() {
+        window.addEventListener("scroll", () => {
+          if ((window.innerHeight + window.scrollY) >= document.getElementById("app").offsetHeight){
+            this.loadPokemons(this.nextPage);
+          }
+        });
+      },
+
     },
 
     async mounted() {
       await this.loadPokemons();
+      this.vueOnScroll();
     },
+
   }
 </script>
 

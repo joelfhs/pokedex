@@ -18,6 +18,9 @@ import HelloWorld from './components/HelloWorld.vue'
               <RouterLink class="nav-link" to="/pokemones">Pokemones</RouterLink>
             </li>
             <li class="nav-item">
+              <RouterLink class="nav-link" to="/pokemones-v2">Pokemones-V2</RouterLink>
+            </li>
+            <li class="nav-item">
               <RouterLink class="nav-link" to="/favoritos">Favoritos</RouterLink>
             </li>
           </ul>
