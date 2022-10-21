@@ -1,4 +1,6 @@
 <template>
+  <h2 class="text-center py-5" v-if="pokemonList.length === 0">No Hay Pokemones en esta Lista...</h2>
+
   <div v-for="(pokemon, index) in pokemonList" class="col-12 co-md-6 col-lg-4 col-xl-3">
     <div class="card my-2">
       <img :src="pokemon.image" :type="pokemon.types[0].type.name" class="card-img-top p-2" :alt="pokemon.name">

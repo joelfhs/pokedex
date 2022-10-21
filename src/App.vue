@@ -15,7 +15,7 @@ import HelloWorld from './components/HelloWorld.vue'
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
             <li class="nav-item">
-              <RouterLink class="nav-link" to="/">Pokemones</RouterLink>
+              <RouterLink class="nav-link" to="/pokemones">Pokemones</RouterLink>
             </li>
             <li class="nav-item">
               <RouterLink class="nav-link" to="/favoritos">Favoritos</RouterLink>
